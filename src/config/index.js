@@ -29,7 +29,7 @@ function validateConfig(config) {
 
 const config = {
   // Application metadata
-  NAME: 'scm-event-listener',
+  NAME: 'scm-repo-subscriber',
   VERSION: '1.0',
   TYPE: 'application',
   STATE: 'active',
