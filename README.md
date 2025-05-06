@@ -1,4 +1,4 @@
-# Unizo SCM Event Listener
+# Unizo SCM Repository Webhook Subscriber
 
 A Node.js service that automates webhook registration on customer repositories using Unizo’s SCM API platform.
 
