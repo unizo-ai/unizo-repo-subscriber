@@ -1,0 +1,121 @@
+# Default values for unizo-repo-subscriber
+replicaCount: 2
+
+image:
+  repository: unizo/repo-subscriber
+  tag: latest
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+deployment:
+  annotations: {}
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: repo-subscriber.unizo.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: repo-subscriber-tls
+      hosts:
+        - repo-subscriber.unizo.com
+
+env:
+  - name: NODE_ENV
+    value: "production"
+  - name: PORT
+    value: "3000"
+  - name: GITHUB_API_URL
+    value: "https://api.github.com"
+  - name: TARGET_ORGANIZATION
+    value: "unizo"
+  - name: APP_URL
+    value: "https://repo-subscriber.unizo.com"
+
+# Secrets to be created
+secrets:
+  - name: GITHUB_API_TOKEN
+    key: github-api-token
+    value: ""
+  - name: WEBHOOK_SECRET
+    key: webhook-secret
+    value: ""
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+startupProbe:
+  httpGet:
+    path: /healthz
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 6

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "unizo-repo-subscriber.fullname" . }}
+  labels:
+    {{- include "unizo-repo-subscriber.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "unizo-repo-subscriber.selectorLabels" . | nindent 4 }}
