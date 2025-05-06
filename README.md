@@ -74,12 +74,12 @@ The service handles the following SCM events:
 
 Build the Docker image:
 ```bash
-docker build -t unizo/scm-event-listener:latest .
+docker build -t unizo/scm-repo-subscriber:latest .
 ```
 
 Run the container:
 ```bash
-docker run -p 3000:3000 --env-file .env unizo/scm-event-listener:latest
+docker run -p 3000:3000 --env-file .env unizo/scm-repo-subscriber:latest
 ```
 
 ## Kubernetes Deployment
@@ -87,7 +87,7 @@ docker run -p 3000:3000 --env-file .env unizo/scm-event-listener:latest
 1. Configure values in `helm/values.yaml`:
    ```yaml
    image:
-     repository: unizo/scm-event-listener
+     repository: unizo/scm-repo-subscriber
      tag: latest
 
    secrets:
